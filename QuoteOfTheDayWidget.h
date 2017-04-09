@@ -1,11 +1,12 @@
-#include <string>
 
 #ifndef QUOTEOFDAY_QUOTEOFDAY_H 
 #define QUOTEOFDAY_QUOTEOFDAY_H
 
-
-//class QuoteOfTheDayWidget:public ApiWidget {
-class QuoteOfTheDayWidget {
+#include <string>
+#include "Widget.h" 
+#include "include/json.hpp" 
+ 
+class QuoteOfTheDayWidget : public Widget { 
   
 public:
   
@@ -22,10 +23,23 @@ public:
   std::string getQuoteTypeOption();
   void setQuoteTypeOption(std::string quoteTypeOption);
   
+  void configure() override; 
+  std::string getConfiguration() override; 
+  std::string refreshData() override; 
+  
+  ~QuoteOfTheDayWidget();
+
 private:
   std::string quote;
   std::string author;
   std::string quoteOptionType;
+  
+  nlohmann::json transformResponse(nlohmann::json response);
+  
+ // I think that the following variables are in the base class
+ // time_t refreshInterval;
+ // time_t lastRefreshed;
+  std::string baseUrl;
   
 };
 
