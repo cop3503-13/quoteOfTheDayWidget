@@ -33,13 +33,10 @@ private:
   std::string quote;
   std::string author;
   std::string quoteOptionType;
-  
+  std::string baseUrl;
+
   nlohmann::json transformResponse(nlohmann::json response);
   
- // I think that the following variables are in the base class
- // time_t refreshInterval;
- // time_t lastRefreshed;
-  std::string baseUrl;
   
 };
 

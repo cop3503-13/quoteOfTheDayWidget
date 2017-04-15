@@ -4,6 +4,7 @@
 #include "QuoteOfTheDayWidget.h"
 #include "httpreq.h" 
 #include "jsonhttpreq.h" 
+#include "promptQuoteOptionType.h"
 
   QuoteOfTheDayWidget::QuoteOfTheDayWidget(){
 	  
@@ -36,9 +37,13 @@
 
   QuoteOfTheDayWidget::~QuoteOfTheDayWidget(){}
 
-  void QuoteOfTheDayWidget::configure() {
-// I'm not sure what this method is supposed to do
-
+  void QuoteOfTheDayWidget::configure() {  // this is the part that prompts the user asking for the quote type
+	std::string quoteTypeOption = promptQuoteOptionType();
+	quoteOptionType = quoteTypeOption;
+	if (quoteOptionType != "")
+		baseUrl = "http://quotes.rest/qod.json?category="+quoteOptionType;
+	else
+		baseUrl = "http://quotes.rest/qod.json";
   }
    
   std::string QuoteOfTheDayWidget::getConfiguration() {
@@ -58,19 +63,20 @@
 	 
      std::string url = baseUrl; 
      
-     std::cout << "url " << url << std::endl;
+     //std::cout << "url " << url << std::endl;
      
-     req.setUrl(url); 
-     req.send(); 
+     req.setUrl(url); //sets the URL
+     req.send(); 	  //sends out the URL and receives the response from the website
         
-     nlohmann::json json = req.getJSONResponse(); 
+     nlohmann::json json = req.getJSONResponse(); //gets the response that was returned
 	 
-     nlohmann::json transformedJson = transformResponse(json); 
+     nlohmann::json transformedJson = transformResponse(json); //extracts the desired data from the json that the website returned and puts it back into a simpler json
      
-     time_t curTime = time(0);			// get current time
-     this->setLastRefreshed(curTime);	// save the time in the lastRefreshed variable
+     //Base class also sets LastRefreshed time
+     //time_t curTime = time(0);			// get current time
+     //this->setLastRefreshed(curTime);	// save the time in the lastRefreshed variable
           
-     return transformedJson.dump(4); 
+     return transformedJson.dump(4); //returns the json to the calling function as a regular string
     
 }
 
@@ -102,15 +108,15 @@ std::string QuoteOfTheDayWidget::QuoteOfTheDayWidget::getQuote(){
 nlohmann::json QuoteOfTheDayWidget::transformResponse(nlohmann::json response) 
   { 
  
-    quote = response["contents"]["quotes"][0]["quote"]; 
+    quote = response["contents"]["quotes"][0]["quote"];  //accesses the quote and author from json that the website returned
 	author = response["contents"]["quotes"][0]["author"];
 
-     nlohmann::json data = { 
+     nlohmann::json data = { //creates the new, simpler json data containing only the desired information
              {"quote",quote}, 
              {"author", author} 
      }; 
  
-     nlohmann::json json = { 
+     nlohmann::json json = {  //creates the actual json object using the data that was just created
              {"name", "Quote"}, 
              {"data", data} 
      }; 
