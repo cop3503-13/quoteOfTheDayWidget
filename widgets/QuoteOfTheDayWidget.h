@@ -1,10 +1,10 @@
 
-#ifndef QUOTEOFDAY_QUOTEOFDAY_H 
-#define QUOTEOFDAY_QUOTEOFDAY_H
+#ifndef QUOTEOFDAY_H 
+#define QUOTEOFDAY_H
 
 #include <string>
 #include "Widget.h" 
-#include "include/json.hpp" 
+#include "../include/json.hpp" 
  
 class QuoteOfTheDayWidget : public Widget { 
   
@@ -12,24 +12,19 @@ public:
   
   QuoteOfTheDayWidget();
   QuoteOfTheDayWidget(std::string quoteTypeOption);
-  //QuoteOfTheDayWidget(rapidjson::Document configDoc);
-  
-  std::string getQuote();
-  void setQuote(std::string quote);
-  
-  std::string getAuthor();
-  void setAuthor(std::string author);
-  
-  std::string getQuoteTypeOption();
-  void setQuoteTypeOption(std::string quoteTypeOption);
-  
+  QuoteOfTheDayWidget(nlohmann::json configJson);
+
   void configure() override; 
   std::string getConfiguration() override; 
-  std::string refreshData() override; 
+  nlohmann::json getConfigurationJson() override; 
+  nlohmann::json refreshData() override; 
+  std::string getQuote();
+  std::string getAuthor();
   
   ~QuoteOfTheDayWidget();
 
 private:
+  
   std::string quote;
   std::string author;
   std::string quoteOptionType;
@@ -37,6 +32,13 @@ private:
 
   nlohmann::json transformResponse(nlohmann::json response);
   
+  void setQuote(std::string quote);
+  
+  
+  void setAuthor(std::string author);
+  
+  std::string getQuoteTypeOption();
+  void setQuoteTypeOption(std::string quoteTypeOption);
   
 };
 

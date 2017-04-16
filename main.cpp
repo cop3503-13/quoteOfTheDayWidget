@@ -3,19 +3,21 @@
 // note that this program can be run only 10 times in one hour due to the access restrictions on the web site
 
 #include <iostream>
-#include "promptQuoteOptionType.h"
-#include "QuoteOfTheDayWidget.h"
+#include "widgets/QuoteOfTheDayWidget.h"
 #include <ctime>
 #include <chrono>
 #include <thread>
+#include "include/json.hpp"
+
+std::string promptQuoteOptionType();
 
 int main() {
+	
     
-    std::string quoteTypeOption = promptQuoteOptionType();
+    QuoteOfTheDayWidget qod = QuoteOfTheDayWidget();
+    qod.configure();
     
-    QuoteOfTheDayWidget qod = QuoteOfTheDayWidget(quoteTypeOption);
-    
-    std::string qodString;						// JSON string to be returned to the mirror
+    nlohmann::json qodJson;						// JSON string to be returned to the mirror
     
     time_t curTime;
     time_t lastTime;
@@ -26,8 +28,8 @@ int main() {
 		lastTime = qod.getLastRefreshed();			// last time qod was refreshed
 		
 		if ((curTime - lastTime) >= interval) {		// only invoke the QOD refresh if it is time to update (max allowed is 10 per hour)
-			qodString = qod.refreshData();
-			std::cout << "QOD returned string " << qodString << std::endl;		// this is the JSON string that will be returned to the mirror
+			qodJson = qod.refreshData();
+			std::cout << "QOD returned json " << qodJson.dump(4) << std::endl;		// this is the JSON string that will be returned to the mirror
 		}
 		
 		std::cout << "\nThe quote of the day is: " << qod.getQuote() << std::endl;			// this is the quote of the day 
@@ -40,3 +42,11 @@ int main() {
 
     return 0;
 }
+
+
+
+
+			
+		  
+
+

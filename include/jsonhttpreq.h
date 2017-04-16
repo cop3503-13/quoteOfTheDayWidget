@@ -2,7 +2,7 @@
 #define JSONHTTPREQ_H
 
 #include <string>
-#include "httpreq.h"
+#include "include/httpreq.h"
 #include "include/json.hpp" 
 
 class JSONHTTPReq : public HTTPReq 

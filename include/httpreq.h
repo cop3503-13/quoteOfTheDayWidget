@@ -38,6 +38,8 @@ class HTTPReq
         void setErrOutput(const bool errOutput);
         bool getVerbose();
         bool getErrOutput();
+		
+		bool isOk();
 
         /* get timestamp for the last request
            or the last ok response */
