@@ -2,10 +2,11 @@
 #include <iostream>
 #include <string>
 #include "QuoteOfTheDayWidget.h"
+#include "Widget.h"
 #include "../include/httpreq.h" 
 #include "../include/jsonhttpreq.h" 
 
-  QuoteOfTheDayWidget::QuoteOfTheDayWidget(){
+  QuoteOfTheDayWidget::QuoteOfTheDayWidget() : Widget(QODWIDGET_NAME){
 	  
 	quote = "";
 	author = "";
@@ -16,9 +17,10 @@
 	this->setRefreshInterval(rfreshInterval);	
 	time_t lstRefreshed = 0;
 	this->setLastRefreshed(lstRefreshed);
+	conf = this->getConfigurationJson();
 }
 
-  QuoteOfTheDayWidget::QuoteOfTheDayWidget(std::string qteTypeOption) {
+  QuoteOfTheDayWidget::QuoteOfTheDayWidget(std::string qteTypeOption) : Widget(QODWIDGET_NAME){
 	quote = "";
 	author = "";
 	
@@ -32,9 +34,10 @@
 		baseUrl = "http://quotes.rest/qod.json?category="+qteTypeOption;
 	else
 		baseUrl = "http://quotes.rest/qod.json";
+	conf = this->getConfigurationJson();
 }	  
 
-	QuoteOfTheDayWidget::QuoteOfTheDayWidget(nlohmann::json conf) {
+	QuoteOfTheDayWidget::QuoteOfTheDayWidget(nlohmann::json conf) : Widget(QODWIDGET_NAME){
 	quote = "";
 	author = "";
 	
@@ -49,6 +52,7 @@
 		baseUrl = "http://quotes.rest/qod.json?category="+qteTypeOption;
 	else
 		baseUrl = "http://quotes.rest/qod.json";
+	conf = this->getConfigurationJson();
 }	  
 
   QuoteOfTheDayWidget::~QuoteOfTheDayWidget(){}		//destructor
@@ -64,9 +68,7 @@
 	} 
 	
 
-  void QuoteOfTheDayWidget::configure() {  // this is the part that prompts the user asking for the quote type
-		//std::string quoteTypeOption = promptQuoteOptionType();
-		//std::string promptQuoteOptionType() {
+  void QuoteOfTheDayWidget::config() {  // this is the part that prompts the user asking for the quote type
 		std::string userInput;
 		std::string quoteOptionType;
 		bool userDone=false;
@@ -143,17 +145,14 @@
 					userDone=true;
 				}
 			}
-			//return quoteOptionType;
-		//}		
-			//	std::string result = " ";
-				//return result;
-
-			std::string quoteTypeOption = quoteOptionType;
-			quoteOptionType = quoteTypeOption;
-			if (quoteOptionType != "")
-				baseUrl = "http://quotes.rest/qod.json?category="+quoteOptionType;
-			else
-				baseUrl = "http://quotes.rest/qod.json";
+		
+		std::string quoteTypeOption = quoteOptionType;
+		quoteOptionType = quoteTypeOption;
+		if (quoteOptionType != "")
+			baseUrl = "http://quotes.rest/qod.json?category="+quoteOptionType;
+		else
+			baseUrl = "http://quotes.rest/qod.json";
+		conf = this->getConfigurationJson();
  	 }
    
   std::string QuoteOfTheDayWidget::getConfiguration() {

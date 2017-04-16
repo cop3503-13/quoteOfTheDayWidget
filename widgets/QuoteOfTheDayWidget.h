@@ -1,6 +1,7 @@
 
 #ifndef QUOTEOFDAY_H 
 #define QUOTEOFDAY_H
+#define QODWIDGET_NAME "QuoteOfTheDay"
 
 #include <string>
 #include "Widget.h" 
@@ -14,9 +15,9 @@ public:
   QuoteOfTheDayWidget(std::string quoteTypeOption);
   QuoteOfTheDayWidget(nlohmann::json configJson);
 
-  void configure() override; 
-  std::string getConfiguration() override; 
-  nlohmann::json getConfigurationJson() override; 
+  void config() override; 
+  std::string getConfiguration(); 
+  nlohmann::json getConfigurationJson(); 
   nlohmann::json refreshData() override; 
   std::string getQuote();
   std::string getAuthor();

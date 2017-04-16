@@ -5,7 +5,7 @@
 #include <string>
 #include <cstring>
 #include <time.h>
-#include "include/curl/curl.h"
+#include "curl/curl.h"
 
 class HTTPReq 
 {
@@ -28,7 +28,7 @@ class HTTPReq
 
         std::string getResponse();
         std::string getUrl();
-        void setUrl(const std::string url);
+        void setUrl(const std::string& url);
         void send();
 
         /* curl verbose output and
@@ -40,6 +40,7 @@ class HTTPReq
         bool getErrOutput();
 		
 		bool isOk();
+		const long getHTTPStatus();
 
         /* get timestamp for the last request
            or the last ok response */

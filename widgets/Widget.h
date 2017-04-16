@@ -1,63 +1,71 @@
+
+
 #ifndef WIDGET_H
 #define WIDGET_H
 
 #include <string>
 #include <iostream>
-#include <time.h>
-
 #include "../include/json.hpp"
 
-class Widget 
-{
 
-	private:
-		time_t lastRefreshed = 0;
-		time_t refreshInterval = 600;
+class Widget {
+private:
+    time_t lastRefreshed = 0;
+    time_t refreshInterval = 600;
 
-	public:
-		//configure method prompts the user for
-		//input to choose the Widget selections
-		virtual void configure() = 0;
+protected:
+    std::string const name;
+    nlohmann::json conf;
 
-		//returns string representation of the json configuration
-		virtual std::string getConfiguration() = 0;
+public:
 
-		//returns json configuration
-		virtual nlohmann::json getConfigurationJson() = 0;
+    Widget(std::string const &nameIt) : name(nameIt){};
+    virtual ~Widget(){};
 
-		virtual nlohmann::json refreshData() = 0;
+    //returns json configuration
+    // This should be a json formatted like this:
+    // {
+    //    "name": "widget name",
+    //    "configuration": {configuration options here}
+    //  }
+    nlohmann::json getConfJSON();
 
-		time_t getLastRefreshed()
-		{
-		    return lastRefreshed;
-		}
+    const std::string& getName();
 
-		void setLastRefreshed(time_t lastRef)
-		{
-		    lastRefreshed = lastRef;
-		}
+    time_t getLastRefreshed();
+    void setLastRefreshed(time_t lastRef);
 
-		time_t getRefreshInterval()
-		{
-		    return refreshInterval;
-		}
 
-		void setRefreshInterval(time_t interval)
-		{
-		    refreshInterval = interval;
-		}
+    /*******
+     * Gets the interval that the data should be updated
+     * override this to provide a refresh interval specific
+     * to your object
+     *
+     * @return time_t refresh interval
+     */
 
-		std::string refresh()
-		{
-		    time_t elapsed = time(0) - lastRefreshed;
-		    if (elapsed > getRefreshInterval())
-		    {
-				//set last refreshed to now
-		        setLastRefreshed(time(0));
-		        return refreshData().dump(4);
-		    }
-		    return"";
-		}
+    time_t getRefreshInterval();
+    void setRefreshInterval(time_t interval);
+
+    std::string refresh();
+
+    /******************
+     * VIRTUAL METHODS TO BE OVERRIDEN ON INHERITANCE
+     */
+
+
+    //config method prompts the user for
+    //input to choose the Widget selections
+    virtual void config() = 0;
+
+    //returns json configuration
+    // this should return json in the format:
+    //     {
+    //        "name": "name of widget"
+    //        "data": {json data we want from api}
+    //      }
+    virtual nlohmann::json refreshData() = 0;
+
 };
 
 #endif //WIDGET_H

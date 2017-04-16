@@ -1,6 +1,6 @@
 INCLUDEOBJS = include/date.o include/common.o include/valid.o include/httpreq.o include/jsonhttpreq.o
-WIDGETSOBJS = widgets/QuoteOfTheDayWidget.o
-OBJS = $(INCLUDEOBJS) $(WIDGETSOBJS) main.o
+WIDGETSOBJS = widgets/QuoteOfTheDayWidget.o widgets/Widget.o
+OBJS = $(WIDGETSOBJS) $(INCLUDEOBJS) main.o
 
 
 CC = g++
@@ -12,7 +12,7 @@ LD = -lcurl
 
 
 widgets/QuoteOfTheDayWidget.o : include/httpreq.o include/jsonhttpreq.o include/common.o include/valid.o include/date.o
-	$(CC) $(CFLAGS) $(IDIR) widgets/QuoteOfTheDayWidget.cpp -o widgets/QuoteOfTheDayWidget.o
+	$(CC) $(CFLAGS) $(IDIR) widgets/QuoteOfTheDayWidget.cpp -o widgets/QuoteOfTheDayWidget.o 
 	
 	
 	
@@ -23,7 +23,8 @@ include/jsonhttpreq.o : include/httpreq.o
 include/httpreq.o :
 	$(CC) $(CFLAGS) $(IDIR) include/httpreq.cpp -o include/httpreq.o
 
-
+widgets/Widget.o :
+	$(CC) $(CFLAGS) $(IDIR) widgets/Widget.cpp -o widgets/Widget.o
 
 
 include/valid.o :

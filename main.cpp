@@ -15,7 +15,7 @@ int main() {
 	
     
     QuoteOfTheDayWidget qod = QuoteOfTheDayWidget();
-    qod.configure();
+    qod.config();
     
     nlohmann::json qodJson;						// JSON string to be returned to the mirror
     
@@ -28,8 +28,9 @@ int main() {
 		lastTime = qod.getLastRefreshed();			// last time qod was refreshed
 		
 		if ((curTime - lastTime) >= interval) {		// only invoke the QOD refresh if it is time to update (max allowed is 10 per hour)
-			qodJson = qod.refreshData();
-			std::cout << "QOD returned json " << qodJson.dump(4) << std::endl;		// this is the JSON string that will be returned to the mirror
+			//qodJson = qod.refreshData();
+			std::string jsonString = qod.refresh();
+			std::cout << "QOD returned json " << jsonString << std::endl;		// this is the JSON string that will be returned to the mirror
 		}
 		
 		std::cout << "\nThe quote of the day is: " << qod.getQuote() << std::endl;			// this is the quote of the day 

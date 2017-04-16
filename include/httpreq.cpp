@@ -1,4 +1,4 @@
-#include "include/httpreq.h"
+#include "httpreq.h"
 
 /* TODO:
     Don't construct object if curl null (exception)
@@ -24,8 +24,8 @@ HTTPReq::HTTPReq(const std::string url, const bool verbose)
     init(url, verbose);
 }
 
-HTTPReq::HTTPReq(const std::string url, 
-                 const bool verbose, 
+HTTPReq::HTTPReq(const std::string url,
+                 const bool verbose,
                  const bool errOutput)
 {
     init(url, verbose, errOutput);
@@ -38,8 +38,8 @@ HTTPReq::~HTTPReq()
 
 
 
-void HTTPReq::init(std::string url, 
-                   bool verbose, 
+void HTTPReq::init(std::string url,
+                   bool verbose,
                    bool errOutput)
 {
     curl = curl_easy_init();
@@ -53,7 +53,7 @@ void HTTPReq::init(std::string url,
         curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
         // follow redirects
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        
+
         setVerbose(verbose);
         setErrOutput(errOutput);
     }
@@ -110,7 +110,7 @@ void HTTPReq::send()
     time(&lastSentTimestamp); // reset send intent time
 
     // do request!
-	responseCode = curl_easy_perform(curl);
+    responseCode = curl_easy_perform(curl);
 
     // check for errors
     if(responseCode != CURLE_OK)
@@ -121,7 +121,7 @@ void HTTPReq::send()
             size_t len = std::strlen(errbuf);
 
             std::cerr << "\nlibcurl: (" << responseCode << ") ";
-            
+
             if(len)
             {
                 std::cerr << errbuf;
@@ -129,7 +129,7 @@ void HTTPReq::send()
                     std::cerr << std::endl;
             }
             else
-                std::cerr << curl_easy_strerror(responseCode) << std::endl;    
+                std::cerr << curl_easy_strerror(responseCode) << std::endl;
         }
 
         // set response empty
@@ -145,34 +145,26 @@ void HTTPReq::send()
 
 bool HTTPReq::isOk()
 {
-	return responseCode == CURLE_OK;
+    return responseCode == CURLE_OK;
+}
+
+
+const long HTTPReq::getHTTPStatus()
+{
+    long http_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    return http_code;
 }
 
 
 
-void HTTPReq::setUrl(const std::string url)
+
+void HTTPReq::setUrl(const std::string& url)
 {
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     this->url = url;
 }
 
-/*
-void HTTPReq::setUrl(const std::string url)
-{
-    char *urlStr = url.c_str();
-    urlStr = curl_easy_escape(curl, urlStr, strlen(urlStr));
-	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    this->url = urlStr;
-}
-
-
-void HTTPReq::setUrl(char * url)
-{
-    url = curl_easy_escape(curl, urlStr, strlen(urlStr));
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    this->url = urlStr;
-}
-*/
 
 
 std::string HTTPReq::getUrl()
@@ -188,6 +180,6 @@ std::string HTTPReq::getResponse()
 
 size_t HTTPReq::writeResponse(void *contents, size_t size, size_t nmemb, void *userp)
 {
-	((std::string*)userp)->append((char*)contents, size * nmemb);
-	return size * nmemb;
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
 }
