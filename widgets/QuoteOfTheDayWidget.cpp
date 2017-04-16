@@ -58,14 +58,9 @@
   QuoteOfTheDayWidget::~QuoteOfTheDayWidget(){}		//destructor
 
   nlohmann::json QuoteOfTheDayWidget::getConfigurationJson() {
-		nlohmann::json conf = { 						//creates a configuration json conf
-             {"name", "QuoteOfTheDay"}, 
-             {"configuration", {
-									{"quoteOptionType", this->getQuoteTypeOption()}
-								}} 
-     };
-		return conf;
-	} 
+	nlohmann::json conf_json = { {"quoteOptionType", this->getQuoteTypeOption() } };
+	return conf_json;
+} 
 	
 
   void QuoteOfTheDayWidget::config() {  // this is the part that prompts the user asking for the quote type
@@ -220,12 +215,7 @@ nlohmann::json QuoteOfTheDayWidget::transformResponse(nlohmann::json response)
      nlohmann::json data = { //creates the new, simpler json data containing only the desired information
              {"quote",quote}, 
              {"author", author} 
-     }; 
+     };
  
-     nlohmann::json json = {  //creates the actual json object using the data that was just created
-             {"name", "Quote"}, 
-             {"data", data} 
-     }; 
-  
-     return json; 
+     return data;
  }; 
